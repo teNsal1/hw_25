@@ -4,13 +4,14 @@ from .models import Master, Service, Order, Review
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import ReviewForm, OrderForm
+from django.urls import reverse
 
 def create_review(request):
     if request.method == 'POST':
         form = ReviewForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('thanks')
+            return redirect(f"{reverse('thanks')}?source=review")  # Исправленная строка
     else:
         form = ReviewForm()
     return render(request, 'core/review_form.html', {'form': form})
@@ -20,7 +21,7 @@ def create_order(request):
         form = OrderForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('thanks')
+            return redirect(f"{reverse('thanks')}?source=order")  # Исправленная строка
     else:
         form = OrderForm()
     return render(request, 'core/order_form.html', {'form': form})
