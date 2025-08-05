@@ -1,8 +1,35 @@
-
-from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from .models import Master, Service, Order, Review
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import ReviewForm, OrderForm
+
+def create_review(request):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('thanks')
+    else:
+        form = ReviewForm()
+    return render(request, 'core/review_form.html', {'form': form})
+
+def create_order(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('thanks')
+    else:
+        form = OrderForm()
+    return render(request, 'core/order_form.html', {'form': form})
+
+def get_services(request):
+    master_id = request.GET.get('master_id')
+    services = Service.objects.filter(masters__id=master_id).values('id', 'name')
+    return JsonResponse(list(services), safe=False)
+
 
 def landing(request):
     """
