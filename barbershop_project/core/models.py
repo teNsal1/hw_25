@@ -23,6 +23,7 @@ class Master(models.Model):
 class Service(models.Model):
     # Основные характеристики услуги
     name = models.CharField(max_length=200, verbose_name="Название")  # Наименование услуги
+    masters = models.ManyToManyField(Master, related_name='services_offered')
     description = models.TextField(blank=True, verbose_name="Описание")  # Детальное описание
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")  # Стоимость услуги
     duration = models.PositiveIntegerField(verbose_name="Длительность", help_text="Время выполнения в минутах")  # Длительность в минутах
